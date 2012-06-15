@@ -7,6 +7,10 @@ class Torch
 		end if back_camera
 	end
 
+	def available?
+		@back_camera || false
+	end
+
 	def turn_on
 		update_config { |back_camera| back_camera.torchMode = AVCaptureTorchModeOn }
 	end
@@ -15,16 +19,23 @@ class Torch
 		update_config { |back_camera| back_camera.torchMode = AVCaptureTorchModeOff }
 	end
 
+	def toggle_torch
+		return false unless available?
+		@back_camera.torchMode == AVCaptureTorchModeOn ? turn_off : turn_on
+	end
+
 private
+
 	def update_config
-		return false unless @back_camera
+		return false unless available?
 		locked = @back_camera.lockForConfiguration( nil )
+		success = false
 		begin
 			success = yield @back_camera if locked
 		ensure
 			@back_camera.unlockForConfiguration if locked
 		end
-		success || locked
+		success
 	end
 
 end
