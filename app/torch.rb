@@ -5,6 +5,7 @@ class Torch
 		if back_camera.torchAvailable? && back_camera.isTorchModeSupported( AVCaptureTorchModeOn )
 			@back_camera = back_camera
 		end if back_camera
+		@listeners = []
 	end
 
 	def available?
@@ -13,10 +14,12 @@ class Torch
 
 	def turn_on
 		update_config { |back_camera| back_camera.torchMode = AVCaptureTorchModeOn }
+		@listeners.each{ |listener| listener.call( self ) }
 	end
 
 	def turn_off
 		update_config { |back_camera| back_camera.torchMode = AVCaptureTorchModeOff }
+		@listeners.each{ |listener| listener.call( self ) }
 	end
 
 	def turned_on?
@@ -26,6 +29,10 @@ class Torch
 
 	def toggle_torch
 		turned_on? ? turn_off : turn_on
+	end
+
+	def on_state_change( &listener )
+		@listeners << listener if block_given?
 	end
 
 private
