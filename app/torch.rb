@@ -19,9 +19,13 @@ class Torch
 		update_config { |back_camera| back_camera.torchMode = AVCaptureTorchModeOff }
 	end
 
-	def toggle_torch
+	def turned_on?
 		return false unless available?
-		@back_camera.torchMode == AVCaptureTorchModeOn ? turn_off : turn_on
+		@back_camera.torchMode == AVCaptureTorchModeOn
+	end
+
+	def toggle_torch
+		turned_on? ? turn_off : turn_on
 	end
 
 private
