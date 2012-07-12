@@ -1,5 +1,6 @@
 class AppDelegate
 	def application( application, didFinishLaunchingWithOptions:launchOptions )
+		application.setStatusBarStyle( UIStatusBarStyleBlackTranslucent, animated:false )
 		@torch = Torch.new
 		@window = UIWindow.alloc.initWithFrame( UIScreen.mainScreen.bounds )
 		@window.rootViewController = FlashlightViewController.alloc.init
